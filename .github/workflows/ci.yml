@@ -18,16 +18,14 @@ jobs:
       - name: Open port 80
         # https://stackoverflow.com/a/23281417/612202
         run: |
-          sudo apt install libcap2-bin
           sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\``
-
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - run: yarn build
       - name: Run multiflare
         run: |
-          node --experimental-vm-modules src/cli.js ./example/my-workshop/workers &
+          yarn multiflare ./example/multiflare/workers &
           export MULTIFLARE_PID=$!
           sleep 2
-          node --experimental-vm-modules node_modules/jest/bin/jest.js
+          yarn test
           kill $MULTIFLARE_PID
