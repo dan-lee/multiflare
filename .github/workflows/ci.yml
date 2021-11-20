@@ -34,6 +34,5 @@ jobs:
         run: |
           yarn example &
           export MULTIFLARE_PID=$!
-          sleep 1.5
           yarn test
           kill $MULTIFLARE_PID
