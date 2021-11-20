@@ -7,8 +7,16 @@ jobs:
     name: 'Build and test'
     runs-on: ubuntu-latest
     steps:
+      - name: Install yarn if needed
+        if: ${{ env.ACT }}
+        run: npm install -g yarn
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
+        if: ${{ env.ACT }}
+        with:
+          node-version: '16.x'
+      - uses: actions/setup-node@v2
+        if: ${{ !env.ACT }}
         with:
           node-version: '16.x'
           cache: 'yarn'
@@ -24,8 +32,8 @@ jobs:
       - run: yarn build
       - name: Run multiflare
         run: |
-          yarn multiflare ./example/multiflare/workers &
+          yarn example &
           export MULTIFLARE_PID=$!
-          sleep 2
+          sleep 1.5
           yarn test
           kill $MULTIFLARE_PID

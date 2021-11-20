@@ -24,9 +24,9 @@
     "tiny-glob": "0.2.9"
   },
   "scripts": {
-    "ver": "node test.js",
     "build": "rm -rf dist && tsc",
     "multiflare": "node --experimental-vm-modules src/cli.js",
+    "example": "yarn multiflare example/multiflare/workers",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "postinstall": "patch-package",
     "prepublishOnly": "yarn test && yarn build"
