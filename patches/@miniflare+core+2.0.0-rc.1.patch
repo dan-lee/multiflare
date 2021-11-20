@@ -1,5 +1,5 @@
 diff --git a/node_modules/@miniflare/core/dist/src/index.js b/node_modules/@miniflare/core/dist/src/index.js
-index dc17491..da0b1d5 100644
+index dc17491..52b3f0b 100644
 --- a/node_modules/@miniflare/core/dist/src/index.js
 +++ b/node_modules/@miniflare/core/dist/src/index.js
 @@ -203,7 +203,7 @@ var BuildPlugin = class extends Plugin2 {
@@ -11,3 +11,45 @@ index dc17491..da0b1d5 100644
          shell: true,
          stdio: "inherit",
          env: { ...process.env, MINIFLARE: "1" }
+@@ -1698,20 +1698,28 @@ var MiniflareCore = class extends TypedEventTarget {
+         if (name === "") {
+           throw new MiniflareCoreError("ERR_MOUNT_NO_NAME", "Mount name cannot be empty");
+         }
+-        const options2 = typeof rawOptions === "string" ? {
++        const mountOptions = typeof rawOptions === "string" ? {
++          rootPath: rawOptions,
++          // Autoload configuration from files
+           packagePath: true,
+           envPath: true,
+           wranglerConfigPath: true,
++          // Copy watch options and storage persistence options when using
++          // string mounts (e.g. via CLI)
+           watch: this.#watching,
+-          rootPath: rawOptions
++          // This tight coupling makes me sad
++          kvPersist: options.KVPlugin?.kvPersist,
++          cachePersist: options.CachePlugin?.cachePersist,
++          durableObjectsPersist:
++          options.DurableObjectsPlugin?.durableObjectsPersist,
+         } : rawOptions;
+-        if ("mounts" in options2) {
++        if ("mounts" in mountOptions) {
+           throw new MiniflareCoreError("ERR_MOUNT_NESTED", "Nested mounts are unsupported");
+         }
+         let mount = this.#mounts.get(name);
+         if (mount) {
+           this.#ctx.log.verbose(`Updating mount "${name}"...`);
+-          await mount.setOptions(options2);
++          await mount.setOptions(mountOptions);
+         } else {
+           this.#ctx.log.debug(`Mounting "${name}"...`);
+           let log = this.#ctx.log;
+@@ -1723,7 +1731,7 @@ var MiniflareCore = class extends TypedEventTarget {
+             log,
+             scriptRunForModuleExports: false
+           };
+-          mount = new MiniflareCore(this.#originalPlugins, ctx2, options2);
++          mount = new MiniflareCore(this.#originalPlugins, ctx2, mountOptions);
+           mount.addEventListener("reload", (event) => {
+             if (!event.initial)
+               this.#reload();
