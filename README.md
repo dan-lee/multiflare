@@ -10,7 +10,9 @@ Having to deal with multiple workers can be difficult, especially if you want to
 
 Multiflare makes this possible with some basic setup required though.
 
-<img src="./multiflare.png" alt="">
+<p align="center">
+<img src="./multiflare.png" alt="" width="650">
+</p>
 
 All code examples in this readme are based off [the example in this repository](https://github.com/dan-lee/multiflare/tree/main/example/my-workshop/workers) 
 
