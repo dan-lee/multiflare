@@ -14,7 +14,7 @@ jobs:
           cache: 'yarn'
       - name: Add test hosts to /etc/hosts
         run: |
-          echo "127.0.0.1 my-workshop.test www.my-workshop.test api.my-workshop.test account.my-workshop.test" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 multiflare.test www.multiflare.test api.multiflare.test account.multiflare.test" | sudo tee -a /etc/hosts
       - name: Open port 80
         # https://stackoverflow.com/a/23281417/612202
         run: |
