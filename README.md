@@ -146,7 +146,28 @@ Phew! That was a lot to take in. If you have any questions or something is not c
 
 
 ## CLI
-@todo
 
+```
+Arguments:
+  directory                Root directory of workers.
+
+Options:
+  --https                  Serve via HTTPS. Be sure to also set --key and --cert
+  --key <key>              Path to key file
+  --cert <cert>            Path to cert file
+  -p, --port <port>        Port where to serve from. Default: 80 for HTTP, 443 for HTTPS
+  -l, --log-level <level>  Log level: none, error, warn, info, debug, verbose (default: "info")
+  -h, --help               display help for command
+```
 ## API
-@todo
+
+```
+multiflare(options: {
+  rootDir: string
+  https?: string
+  key?: string
+  cert?: string
+  port?: string
+  logLevel?: string
+}): Promise<void>
+```
