@@ -159,11 +159,11 @@ routes = ["multiflare.io/*", "www.multiflare.io/*"]
 **Now you should be ready to run `multiflare`! 👌**
 
 ```sh
-yarn multiflare ./examples/project/workers
+yarn multiflare ./example/multiflare/workers
 
 # or with ES modules
 
-NODE_OPTIONS=--experimental-vm-modules yarn multiflare ./examples/project/workers
+NODE_OPTIONS=--experimental-vm-modules yarn multiflare ./example/multiflare/workers
 ```
 
 Phew! That was a lot to take in. If you have any questions or something is not clear, please feel free to open an issue.
