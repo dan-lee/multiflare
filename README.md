@@ -28,11 +28,16 @@ npm i --save-dev multiflare
 
 ## 🧑‍🔧 Usage
 
-🏃 Running `multiflare` is easy:
+Running `multiflare` is easy:
 
 ```sh
 yarn multiflare ./example/my-workshop/workers
+
+# or with ES modules
+
+NODE_OPTIONS=--experimental-vm-modules yarn multiflare ./example/my-workshop/workers
 ```
+
 
 It requires some setup though:
 
@@ -129,6 +134,10 @@ routes = ["my-workshop.io/*", "www.my-workshop.io/*"]
 
 ```sh
 yarn miniflare ./examples/my-workshop/workers
+
+# or with ES modules
+
+NODE_OPTIONS=--experimental-vm-modules yarn multiflare ./example/my-workshop/workers
 ```
 
 Phew! That was a lot to take in. If you have any questions or something is not clear, please feel free to open an issue.
