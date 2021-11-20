@@ -1,0 +1,13 @@
+diff --git a/node_modules/@miniflare/core/dist/src/index.js b/node_modules/@miniflare/core/dist/src/index.js
+index dc17491..da0b1d5 100644
+--- a/node_modules/@miniflare/core/dist/src/index.js
++++ b/node_modules/@miniflare/core/dist/src/index.js
+@@ -203,7 +203,7 @@ var BuildPlugin = class extends Plugin2 {
+       return {};
+     return new Promise((resolve, reject) => {
+       const build = childProcess.spawn(buildCommand, {
+-        cwd: this.buildBasePath,
++        cwd: this.buildBasePath ?? this.ctx.rootPath,
+         shell: true,
+         stdio: "inherit",
+         env: { ...process.env, MINIFLARE: "1" }

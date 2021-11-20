@@ -1,0 +1,11 @@
+name = "api"
+
+[env.dev]
+route = "api.my-workshop.test"
+
+[build]
+command = ""
+
+[build.upload]
+dir = ""
+main = "./worker.js"

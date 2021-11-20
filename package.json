@@ -1,0 +1,43 @@
+{
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=16"
+  },
+  "type": "module",
+  "author": "dan-lee",
+  "license": "MIT",
+  "repository": "https://github.com/dan-lee/multiflare",
+  "name": "multiflare",
+  "bin": "dist/cli.js",
+  "main": "dist/multiflare.js",
+  "types": "dist/multiflare.d.ts",
+  "module": "dist/multiflare.js",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@iarna/toml": "3.0.0",
+    "commander": "8.3.0",
+    "esbuild": "0.13.14",
+    "match-url-wildcard": "0.0.4",
+    "miniflare": "2.0.0-rc.1",
+    "tiny-glob": "0.2.9"
+  },
+  "scripts": {
+    "ver": "node test.js",
+    "build": "rm -rf dist && tsc",
+    "multiflare": "node --experimental-vm-modules src/cli.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "postinstall": "patch-package",
+    "prepublishOnly": "yarn test && yarn build"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "3.2.0",
+    "@types/jest": "27.0.3",
+    "@types/node": "16.11.9",
+    "jest": "27.3.1",
+    "patch-package": "6.4.7",
+    "prettier": "2.4.1",
+    "typescript": "4.5.2"
+  }
+}
