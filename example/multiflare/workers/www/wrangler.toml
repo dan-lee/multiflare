@@ -3,6 +3,10 @@ name = "www"
 [env.dev]
 routes = ["multiflare.test/*", "www.multiflare.test/*"]
 
+# this is just for demonstration
+[env.production]
+routes = ["multiflare.io/*", "www.multiflare.io/*"]
+
 [build.upload]
 dir = ""
 main = "./worker.js"

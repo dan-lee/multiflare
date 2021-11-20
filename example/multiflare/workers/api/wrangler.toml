@@ -3,6 +3,10 @@ name = "api"
 [env.dev]
 route = "api.multiflare.test/*"
 
+# this is just for demonstration
+[env.production]
+route = "api.multiflare.io/*"
+
 [build.upload]
 dir = ""
 main = "./worker.js"
