@@ -1,0 +1,8 @@
+name = "www"
+
+[env.dev]
+routes = ["multiflare.test/*", "www.multiflare.test/*"]
+
+[build.upload]
+dir = ""
+main = "./worker.js"

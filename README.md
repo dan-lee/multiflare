@@ -1,20 +1,46 @@
 # multiflare
 
-Run multiple simulated [Cloudflare Workers](https://workers.cloudflare.com/) in your project with `multiflare` utilizing [the amazing `miniflare`](https://v2.miniflare.dev/) and its [`mount` option](https://v2.miniflare.dev/mount.html#mounting-workers) 🚀 
+Run multiple simulated [Cloudflare Workers](https://workers.cloudflare.com/) in your project with `multiflare` utilizing [the amazing `miniflare`](https://v2.miniflare.dev/) and its [`mount` option](https://v2.miniflare.dev/mount.html#mounting-workers) 🚀
 
 This is useful if you have a lot of workers to orchestrate; maybe even in a monorepo. The workers can have their individual configuration in their own `wrangler.toml`.
 
 ## 🤔 Motivation
 
-Having to deal with multiple workers can be difficult, especially if you want to simulate near-production environment regarding domains.
+Developing with multiple workers can be difficult, especially if you want to simulate near-production environment. Multiflare proxies requests from subdomains to a local worker. 
 
-Multiflare makes this possible with some basic setup required though.
+Imagine having an actual production project looking like this:
+
+- `www.multiflare.io` ➜ Static landing page
+- `blog.multiflare.io` ➜ GraphQL powered blog
+- `chat.multiflare.io` ➜ Live chat worker with durable object
+- `api.multiflare.io` ➜ Some other endpoints
+
+
+In _development_ you will feel as in production, but with your own data:
+
+- `www.multiflare.test` ➜ Static landing page
+- `blog.multiflare.test` ➜ GraphQL powered blog
+- `chat.multiflare.test` ➜ Live chat worker with durable object
+- `api.multiflare.test` ➜ Some other endpoints
 
 <p align="center">
 <img src="./multiflare.png" alt="" width="650">
 </p>
 
-All code examples in this readme are based off [the example in this repository](https://github.com/dan-lee/multiflare/tree/main/example/my-workshop/workers) 
+
+All these workers can share KV, Durable Objects, cache etc.
+
+Essentially everything [`miniflare` offers](https://v2.miniflare.dev/) can be used by `multiflare`:
+
+> Miniflare is a simulator for developing and testing Cloudflare Workers.
+>
+> - 🎉 Fun: develop workers easily with detailed logging, file watching and pretty error pages supporting source maps.
+> - 🔋 Full-featured: supports most Workers features, including KV, Durable 
+>Objects, WebSockets, modules and more.
+> 
+> - ⚡ Fully-local: test and develop Workers without an internet connection. Reload code on change quickly.
+
+All code examples in this readme are based on [the example in this repository](https://github.com/dan-lee/multiflare/tree/main/example/multiflare/workers).
 
 ## 📥 Installation
 
@@ -25,7 +51,7 @@ yarn add multiflare --dev
 
 # or
 
-npm i --save-dev multiflare
+npm install --save-dev multiflare
 ```
 
 ## 🧑‍🔧 Usage
@@ -33,13 +59,12 @@ npm i --save-dev multiflare
 Running `multiflare` is easy:
 
 ```sh
-yarn multiflare ./example/my-workshop/workers
+yarn multiflare ./example/multiflare/workers
 
 # or with ES modules
 
-NODE_OPTIONS=--experimental-vm-modules yarn multiflare ./example/my-workshop/workers
+NODE_OPTIONS=--experimental-vm-modules yarn multiflare ./example/multiflare/workers
 ```
-
 
 It requires some setup though:
 
@@ -48,7 +73,7 @@ It requires some setup though:
 Put all your workers as subdirectory in a common directory with their respective `wrangler.toml` files. Like so:
 
 ```
-my-workshop/
+multiflare/
 └── workers
     ├── api
     │   ├── wrangler.toml
@@ -65,7 +90,7 @@ my-workshop/
 
 To simulate production environment it's useful to have a similar domain locally.
 
-For example if your production domain is `my-workshop.io` you can easily add `my-workshop.test` domain to your local machine just to have a similar environment.
+For example if your production domain is `multiflare.io` you can easily add `multiflare.test` domain to your local machine just to have a similar environment.
 
 ### Simple setup for pre-defined subdomains
 
@@ -73,9 +98,10 @@ Open and modify `/etc/hosts`:
 
 ```sh
 # Append to file
-127.0.0.1 my-workshop.test www.my-workshop.test
-127.0.0.1 api.my-workshop.test
-127.0.0.1 account.my-workshop.test
+127.0.0.1 multiflare.test www.multiflare.test
+127.0.0.1 api.multiflare.test
+127.0.0.1 blog.multiflare.test
+127.0.0.1 chat.multiflare.test
 ```
 
 <details>
@@ -100,50 +126,47 @@ nameserver 127.0.0.1
 4. Add file `/etc/resolver/test` with this line `nameserver 127.0.0.1`
 </details>
 
-
-
 ### Configure `wrangler.toml` of the workers
 
 Put your domain(s) into the `[env.dev]` section, so `multiflare` is able to pick it up.
 
 `…/api/wrangler.toml`:
+
 ```toml
 name = "api"
 
 # 👇 This is key
 [env.dev]
-route = "api.my-workshop.test/*"
+route = "api.multiflare.test/*"
 
 [env.production]
-route = "api.my-workshop.io/*"
+route = "api.multiflare.io/*"
 ```
 
 `…/website/wrangler.toml`:
-
 
 ```toml
 name = "website"
 
 # 👇 This is key
 [env.dev]
-routes = ["my-workshop.test/*", "www.my-workshop.test/*"]
+routes = ["multiflare.test/*", "www.multiflare.test/*"]
 
 [env.production]
-routes = ["my-workshop.io/*", "www.my-workshop.io/*"]
+routes = ["multiflare.io/*", "www.multiflare.io/*"]
 ```
 
-**Now you should be ready to run `multiflare`! 👌** 
+**Now you should be ready to run `multiflare`! 👌**
 
 ```sh
-yarn miniflare ./examples/my-workshop/workers
+yarn multiflare ./examples/project/workers
 
 # or with ES modules
 
-NODE_OPTIONS=--experimental-vm-modules yarn multiflare ./example/my-workshop/workers
+NODE_OPTIONS=--experimental-vm-modules yarn multiflare ./examples/project/workers
 ```
 
 Phew! That was a lot to take in. If you have any questions or something is not clear, please feel free to open an issue.
-
 
 ## CLI
 
@@ -159,6 +182,7 @@ Options:
   -l, --log-level <level>  Log level: none, error, warn, info, debug, verbose (default: "info")
   -h, --help               display help for command
 ```
+
 ## API
 
 ```

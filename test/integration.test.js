@@ -17,11 +17,10 @@ const request = async (hostname, port = 80) =>
 
 describe('multiflare', () => {
   it('should respond', async () => {
-    await expect(request('my-workshop.test')).resolves.toBe('Website ok')
-    await expect(request('www.my-workshop.test')).resolves.toBe('Website ok')
-    await expect(request('api.my-workshop.test')).resolves.toBe('API ok')
-    await expect(request('account.my-workshop.test')).resolves.toBe(
-      'Account ok',
-    )
+    await expect(request('multiflare.test')).resolves.toBe('Page ok')
+    await expect(request('www.multiflare.test')).resolves.toBe('Page ok')
+    await expect(request('api.multiflare.test')).resolves.toBe('API ok')
+    await expect(request('blog.multiflare.test')).resolves.toBe('Blog ok')
+    await expect(request('chat.multiflare.test')).resolves.toBe('Chat ok')
   })
 })

@@ -1,0 +1,8 @@
+name = "blog"
+
+[env.dev]
+route = "blog.multiflare.test/*"
+
+[build.upload]
+dir = ""
+main = "./worker.js"

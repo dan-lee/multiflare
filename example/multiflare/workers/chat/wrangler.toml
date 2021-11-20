@@ -1,0 +1,8 @@
+name = "chat"
+
+[env.dev]
+route = "chat.multiflare.test/*"
+
+[build.upload]
+dir = ""
+main = "./worker.js"

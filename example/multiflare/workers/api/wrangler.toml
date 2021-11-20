@@ -1,10 +1,7 @@
 name = "api"
 
 [env.dev]
-route = "api.my-workshop.test"
-
-[build]
-command = ""
+route = "api.multiflare.test/*"
 
 [build.upload]
 dir = ""
