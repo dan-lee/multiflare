@@ -10,7 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
-    "types": ["@cloudflare/workers-types", "jest"]
+    "types": ["@cloudflare/workers-types", "jest", "./src/globals.d.ts"]
   },
   "include": ["src"],
   "exclude": ["node_modules"]

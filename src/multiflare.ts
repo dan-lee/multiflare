@@ -6,6 +6,7 @@ import { Log, LogLevel, Miniflare } from 'miniflare'
 import glob from 'tiny-glob/sync.js'
 import TOML from '@iarna/toml'
 import { createKvProxy } from './utils/kv'
+import { createCacheProxy } from './utils/cache'
 
 export type MultiflareOptions = {
   rootDir: string
@@ -107,7 +108,10 @@ const multiflare = async (options: MultiflareOptions) => {
   return {
     stop,
     server,
-    kv: createKvProxy(mf),
+    getWorker: (worker: string) => ({
+      kv: createKvProxy(worker, mf),
+      cache: createCacheProxy(mf),
+    }),
     miniflare: mf,
   }
 }

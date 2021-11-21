@@ -35,17 +35,19 @@ describe('multiflare', () => {
   })
 
   it('should work with KV', async () => {
-    const { stop, kv } = await multiflare({
+    const { stop, getWorker } = await multiflare({
       rootDir: './test/test-workers',
     })
 
     const key = crypto.randomBytes(5).toString('hex')
     const value = crypto.randomBytes(5).toString('hex')
 
-    await kv('blog', 'BLOG_ENTRIES').put(key, JSON.stringify(value))
+    await getWorker('blog').kv('BLOG_ENTRIES').put(key, JSON.stringify(value))
 
     await expect(request(`blog.multiflare.test/${key}`)).resolves.toBe(value)
 
     await stop()
   })
+
+  it('should work with Cache', async () => {})
 })

@@ -1,32 +1,33 @@
-import { Miniflare } from 'miniflare'
+import type { Miniflare } from 'miniflare'
+
+const __bindings = new Map<string, Record<string, KVNamespace>>()
 
 export const createKvProxy =
-  (mf: Miniflare) => (worker: string, namespace: string) => {
+  (worker: string, mf: Miniflare) => (namespace: string) => {
     const createProxiedFn =
       <Fn extends keyof KVNamespace>(fn: Fn) =>
       async (...args: Parameters<KVNamespace[Fn]>) => {
-        const mount = await mf.getMount(worker)
+        if (!__bindings.has(worker)) {
+          const mount = await mf.getMount(worker)
 
-        if (!mount) {
-          throw new Error(`Mount '${worker}' not found`)
+          if (!mount) {
+            throw new Error(`Mount '${worker}' not found`)
+          }
+
+          const bindings = await mount.getBindings()
+
+          __bindings.set(worker, bindings)
         }
 
-        const bindings = await mount.getBindings()
-
-        if (!bindings) {
-          throw new Error(`Cannot get bindings for worker '${worker}'`)
-        }
-
-        const kvNamespace = bindings[namespace] as KVNamespace
+        const bindings = __bindings.get(worker)!
+        const kvNamespace = bindings[namespace]
 
         return (kvNamespace[fn] as any)(...args)
       }
 
-    return {
-      put: createProxiedFn('put'),
-      list: createProxiedFn('list'),
-      delete: createProxiedFn('delete'),
-      get: createProxiedFn('get'),
-      getWithMetadata: createProxiedFn('getWithMetadata'),
-    }
+    const methods = ['put', 'list', 'delete', 'get', 'getWithMetadata'] as const
+
+    return Object.fromEntries(
+      methods.map((method) => [method, createProxiedFn(method)]),
+    )
   }
