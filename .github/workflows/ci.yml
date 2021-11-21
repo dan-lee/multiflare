@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install yarn if needed
-        #if: ${{ env.ACT }}
-        run: sudo apt install --no-install-recommends --reinstall yarn
+        if: ${{ env.ACT }}
+        run: npm install -g yarn
       - uses: actions/checkout@v2
       # if in ACT local runner
       - uses: actions/setup-node@v2
