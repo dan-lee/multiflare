@@ -1,5 +1,5 @@
 {
-  "version": "0.1.6",
+  "version": "0.2.0",
   "engines": {
     "node": ">=16"
   },
@@ -18,7 +18,10 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./dist/multiflare.js"
+    },
+    "./utils/kv": {
+      "import": "./dist/utils/kv.js"
     },
     "./*": {
       "import": "./dist/*.js"
