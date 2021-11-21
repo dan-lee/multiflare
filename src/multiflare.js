@@ -13,7 +13,7 @@ import TOML from '@iarna/toml'
  * @property {string=} key
  * @property {string=} cert
  * @property {string=} port
- * @property {string=} logLevel
+ * @property {'none' |'error' |'warn' |'info' |'debug' |'verbose'=} logLevel
  */
 
 const _filename = fileURLToPath(import.meta.url)
@@ -21,6 +21,7 @@ const _dirname = path.dirname(_filename)
 
 /**
  * @param {MultiflareOptions} options
+ * @returns {Promise<{ stop: () => Promise<void>, server: import('http').Server | import('https').Server, miniflare: Miniflare}>}
  */
 const multiflare = async (options) => {
   const searchDir = path.join(process.cwd(), options.rootDir)
@@ -69,6 +70,7 @@ const multiflare = async (options) => {
     }),
   )
 
+  /** @type {LogLevel} */
   const logLevel = {
     none: LogLevel.NONE,
     error: LogLevel.ERROR,
@@ -98,7 +100,18 @@ const multiflare = async (options) => {
     httpsCertPath: options.cert,
   })
 
-  mf.startServer()
+  const server = await mf.startServer()
+
+  const stop = () =>
+    new Promise((resolve) => {
+      server.close(() => mf.dispose().then(resolve))
+    })
+
+  return {
+    stop,
+    server,
+    miniflare: mf,
+  }
 }
 
 export default multiflare

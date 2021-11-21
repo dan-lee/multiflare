@@ -6,7 +6,7 @@ This is useful if you have a lot of workers to orchestrate; maybe even in a mono
 
 ## 🤔 Motivation
 
-Developing with multiple workers can be difficult, especially if you want to simulate near-production environment. Multiflare proxies requests from subdomains to a local worker. 
+Developing with multiple workers can be difficult, especially if you want to simulate near-production environment. Multiflare proxies requests from subdomains to a local worker.
 
 Imagine having an actual production project looking like this:
 
@@ -14,7 +14,6 @@ Imagine having an actual production project looking like this:
 - `blog.multiflare.io` ➜ GraphQL powered blog
 - `chat.multiflare.io` ➜ Live chat worker with durable object
 - `api.multiflare.io` ➜ Some other endpoints
-
 
 In _development_ you will feel as in production, but with your own data:
 
@@ -27,7 +26,6 @@ In _development_ you will feel as in production, but with your own data:
 <img src="./multiflare.png" alt="" width="650">
 </p>
 
-
 All these workers can share KV, Durable Objects, cache etc.
 
 Essentially everything [`miniflare` offers](https://v2.miniflare.dev/) can be used by `multiflare`:
@@ -35,9 +33,9 @@ Essentially everything [`miniflare` offers](https://v2.miniflare.dev/) can be us
 > Miniflare is a simulator for developing and testing Cloudflare Workers.
 >
 > - 🎉 Fun: develop workers easily with detailed logging, file watching and pretty error pages supporting source maps.
-> - 🔋 Full-featured: supports most Workers features, including KV, Durable 
->Objects, WebSockets, modules and more.
-> 
+> - 🔋 Full-featured: supports most Workers features, including KV, Durable
+>   Objects, WebSockets, modules and more.
+>
 > - ⚡ Fully-local: test and develop Workers without an internet connection. Reload code on change quickly.
 
 All code examples in this readme are based on [the example in this repository](https://github.com/dan-lee/multiflare/tree/main/example/multiflare/workers).
@@ -185,13 +183,38 @@ Options:
 
 ## API
 
-```
-multiflare(options: {
+Types:
+
+```ts
+import multiflare from 'multiflare'
+
+export type MultiflareOptions = {
   rootDir: string
-  https?: string
-  key?: string
-  cert?: string
-  port?: string
-  logLevel?: string
-}): Promise<void>
+  https?: string | undefined
+  key?: string | undefined
+  cert?: string | undefined
+  port?: string | undefined
+  logLevel?:
+    | ('none' | 'error' | 'warn' | 'info' | 'debug' | 'verbose')
+    | undefined
+}
+
+declare function multiflare(options: MultiflareOptions): Promise<{
+  stop: () => Promise<void>
+  server: import('http').Server | import('https').Server
+  miniflare: Miniflare
+}>
+```
+
+Example usage:
+
+```ts
+import multiflare from 'multiflare'
+
+const { stop } = await multiflare({
+  rootDir: './workers',
+})
+
+// later in time:
+await stop()
 ```
