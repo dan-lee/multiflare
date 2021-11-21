@@ -11,13 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install yarn if needed
-        if: ${{ env.ACT }}
+#        if: ${{ env.ACT }}
         run: npm install -g yarn
       - uses: actions/checkout@v2
+      # if in ACT local runner
       - uses: actions/setup-node@v2
         if: ${{ env.ACT }}
         with:
           node-version: '16.x'
+      # else github action
       - uses: actions/setup-node@v2
         if: ${{ !env.ACT }}
         with:
