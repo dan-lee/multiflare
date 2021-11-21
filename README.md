@@ -25,16 +25,16 @@ Now you are able to access the workers like so:
   <tr>
   <td>
 
-  - `www.multiflare.io`
-  - `blog.multiflare.io`
-  - `chat.multiflare.io`
-  - `api.multiflare.io`
-  <td>
+- `www.multiflare.io`
+- `blog.multiflare.io`
+- `chat.multiflare.io`
+- `api.multiflare.io`
+<td>
 
-  - `www.multiflare.test`
-  - `blog.multiflare.test`
-  - `chat.multiflare.test`
-  - `api.multiflare.test`
+- `www.multiflare.test`
+- `blog.multiflare.test`
+- `chat.multiflare.test`
+- `api.multiflare.test`
 </table>
 
 <img src="./multiflare.png" alt="" width="650">
@@ -47,7 +47,7 @@ Essentially everything [`miniflare` offers](https://v2.miniflare.dev/) can be us
 >
 > - 🎉 Fun: develop workers easily with detailed logging, file watching and pretty error pages supporting source maps.
 > - 🔋 Full-featured: supports most Workers features, including KV, Durable
-    >   Objects, WebSockets, modules and more.
+>   Objects, WebSockets, modules and more.
 > - ⚡ Fully-local: test and develop Workers without an internet connection. Reload code on change quickly.
 
 All code examples in this readme are based on [the example in this repository](https://github.com/dan-lee/multiflare/tree/main/example/multiflare/workers).
@@ -117,7 +117,6 @@ Open and modify `/etc/hosts`:
 <details>
 <summary><b>Advanced setup for any domain (catch all)</b></summary>
 
-  
 This describes the case for all `*.test` domains:
 
 1. Install [`dnsmasq`](https://thekelleys.org.uk/dnsmasq/doc.html): `brew install dnsmasq` (installation differs depending on your system)
@@ -199,24 +198,22 @@ Options:
 Types:
 
 ```ts
-import multiflare from 'multiflare'
-
 export type MultiflareOptions = {
   rootDir: string
-  https?: string | undefined
-  key?: string | undefined
-  cert?: string | undefined
-  port?: string | undefined
-  logLevel?:
-    | ('none' | 'error' | 'warn' | 'info' | 'debug' | 'verbose')
-    | undefined
+  https?: string
+  key?: string
+  cert?: string
+  port?: string
+  logLevel?: 'none' | 'error' | 'warn' | 'info' | 'debug' | 'verbose'
 }
 
-declare function multiflare(options: MultiflareOptions): Promise<{
-  stop: () => Promise<void>
+declare const multiflare: (options: MultiflareOptions) => Promise<{
+  stop: () => Promise<unknown>
   server: import('http').Server | import('https').Server
   miniflare: Miniflare
 }>
+
+export default multiflare
 ```
 
 Example usage:
