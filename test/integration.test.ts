@@ -1,4 +1,5 @@
 import http from 'node:http'
+import crypto from 'node:crypto'
 
 import multiflare from '../src/multiflare'
 
@@ -29,6 +30,21 @@ describe('multiflare', () => {
     await expect(request('api.multiflare.test')).resolves.toBe('API ok')
     await expect(request('blog.multiflare.test')).resolves.toBe('Blog ok')
     await expect(request('chat.multiflare.test')).resolves.toBe('Chat ok')
+
+    await stop()
+  })
+
+  it('should work with KV', async () => {
+    const { stop, kv } = await multiflare({
+      rootDir: './test/test-workers',
+    })
+
+    const key = crypto.randomBytes(5).toString('hex')
+    const value = crypto.randomBytes(5).toString('hex')
+
+    await kv('blog', 'BLOG_ENTRIES').put(key, JSON.stringify(value))
+
+    await expect(request(`blog.multiflare.test/${key}`)).resolves.toBe(value)
 
     await stop()
   })

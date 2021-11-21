@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs'
 import { Log, LogLevel, Miniflare } from 'miniflare'
 import glob from 'tiny-glob/sync.js'
 import TOML from '@iarna/toml'
+import { createKvProxy } from './utils/kv'
 
 export type MultiflareOptions = {
   rootDir: string
@@ -106,6 +107,7 @@ const multiflare = async (options: MultiflareOptions) => {
   return {
     stop,
     server,
+    kv: createKvProxy(mf),
     miniflare: mf,
   }
 }

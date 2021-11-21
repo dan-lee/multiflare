@@ -9,9 +9,8 @@
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "allowJs": true,
-    "checkJs": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "types": ["@cloudflare/workers-types", "jest"]
   },
   "include": ["src"],
   "exclude": ["node_modules"]
