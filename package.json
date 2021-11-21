@@ -1,5 +1,5 @@
 {
-  "version": "0.2.1",
+  "version": "0.2.2",
   "engines": {
     "node": ">=16"
   },
@@ -16,17 +16,6 @@
     "dist",
     "patches"
   ],
-  "exports": {
-    ".": {
-      "import": "./dist/multiflare.js"
-    },
-    "./utils/kv": {
-      "import": "./dist/utils/kv.js"
-    },
-    "./*": {
-      "import": "./dist/*.js"
-    }
-  },
   "dependencies": {
     "@iarna/toml": "3.0.0",
     "commander": "8.3.0",
