@@ -8,23 +8,36 @@ This is useful if you have a lot of workers to orchestrate; maybe even in a mono
 
 Developing with multiple workers can be difficult, especially if you want to simulate near-production environment. Multiflare proxies requests from subdomains to a local worker.
 
-Imagine having an actual production project looking like this:
+Imagine having a project with a few workers looking like this:
 
-- `www.multiflare.io` ➜ Static landing page
-- `blog.multiflare.io` ➜ GraphQL powered blog
-- `chat.multiflare.io` ➜ Live chat worker with durable object
-- `api.multiflare.io` ➜ Some other endpoints
+- `www`: Static landing page
+- `blog`: GraphQL powered blog
+- `chat`: Live chat worker with durable object
+- `api`: Some other endpoints
 
-In _development_ you will feel as in production, but with your own data:
+Now you are able to access the workers like so:
 
-- `www.multiflare.test` ➜ Static landing page
-- `blog.multiflare.test` ➜ GraphQL powered blog
-- `chat.multiflare.test` ➜ Live chat worker with durable object
-- `api.multiflare.test` ➜ Some other endpoints
+<table>
+  <tr>
+    <td>Production via Cloudflare
+    <td>Development via <code>multiflare</code>
+  </tr>
+  <tr>
+  <td>
 
-<p align="center">
+  - `www.multiflare.io`
+  - `blog.multiflare.io`
+  - `chat.multiflare.io`
+  - `api.multiflare.io`
+  <td>
+
+  - `www.multiflare.test`
+  - `blog.multiflare.test`
+  - `chat.multiflare.test`
+  - `api.multiflare.test`
+</table>
+
 <img src="./multiflare.png" alt="" width="650">
-</p>
 
 All these workers can share KV, Durable Objects, cache etc.
 
@@ -34,8 +47,7 @@ Essentially everything [`miniflare` offers](https://v2.miniflare.dev/) can be us
 >
 > - 🎉 Fun: develop workers easily with detailed logging, file watching and pretty error pages supporting source maps.
 > - 🔋 Full-featured: supports most Workers features, including KV, Durable
->   Objects, WebSockets, modules and more.
->
+    >   Objects, WebSockets, modules and more.
 > - ⚡ Fully-local: test and develop Workers without an internet connection. Reload code on change quickly.
 
 All code examples in this readme are based on [the example in this repository](https://github.com/dan-lee/multiflare/tree/main/example/multiflare/workers).
@@ -105,6 +117,7 @@ Open and modify `/etc/hosts`:
 <details>
 <summary><b>Advanced setup for any domain (catch all)</b></summary>
 
+  
 This describes the case for all `*.test` domains:
 
 1. Install [`dnsmasq`](https://thekelleys.org.uk/dnsmasq/doc.html): `brew install dnsmasq` (installation differs depending on your system)
