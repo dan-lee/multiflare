@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
-import multiflare from './multiflare.js'
+import multiflare, { MultiflareOptions } from './multiflare'
 
 const cli = new Command('multiflare')
   .argument('<directory>', 'Root directory of workers.')
@@ -19,8 +19,7 @@ const cli = new Command('multiflare')
 
 cli.parse(process.argv)
 
-/**@type {Omit<import("./multiflare.js").MultiflareOptions, 'rootDir'>} */
-const options = cli.opts()
+const options = cli.opts() as Omit<MultiflareOptions, 'rootDir'>
 
 multiflare({
   rootDir: cli.args[0],

@@ -1,4 +1,8 @@
+/** @type {import('@jest/types').Config.InitialOptions} */
 export default {
   testEnvironment: 'miniflare',
-  transform: {},
+  extensionsToTreatAsEsm: ['.ts'],
+  transform: {
+    '\\.[tj]sx?$': ['esbuild-jest', { format: 'esm', target: 'esnext' }],
+  },
 }
