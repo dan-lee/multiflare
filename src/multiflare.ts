@@ -5,8 +5,10 @@ import { readFileSync } from 'node:fs'
 import { Log, LogLevel, Miniflare } from 'miniflare'
 import glob from 'tiny-glob/sync.js'
 import TOML from '@iarna/toml'
+
 import { createKvProxy } from './utils/kv'
 import { createCacheProxy } from './utils/cache'
+import { objectMap } from './utils/objectMap'
 
 export type MultiflareOptions = {
   rootDir: string
@@ -14,17 +16,11 @@ export type MultiflareOptions = {
   key?: string
   cert?: string
   port?: string
-  logLevel?: 'none' | 'error' | 'warn' | 'info' | 'debug' | 'verbose'
+  logLevel?: Lowercase<keyof Record<keyof typeof LogLevel, unknown>>
 }
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-
-const objectMap = <TValue, TResult>(
-  obj: Record<string, TValue>,
-  fn: <TKey extends string>(key: TKey, value: TValue) => [TKey, TResult],
-) =>
-  Object.fromEntries(Object.entries(obj).map(([key, value]) => fn(key, value)))
 
 const multiflare = async (options: MultiflareOptions) => {
   const searchDir = path.join(process.cwd(), options.rootDir)
@@ -41,6 +37,11 @@ const multiflare = async (options: MultiflareOptions) => {
       const mount = path.resolve(__dirname, dir)
 
       const env = wranglerConfig.env as any
+
+      if (!wranglerConfig.name) {
+        console.error(`Wrangler config at '${wranglerPath}' is missing a name.`)
+        process.exit(1)
+      }
 
       if (!env?.dev) {
         console.error(
@@ -66,8 +67,8 @@ const multiflare = async (options: MultiflareOptions) => {
     }),
   )
 
-  const mounts = objectMap(config, (key, value) => [key, value.mount])
-  const routes = objectMap(config, (key, value) => [key, value.routes])
+  const mounts = objectMap(config, (key, { mount }) => [key, mount])
+  const routes = objectMap(config, (key, { routes }) => [key, routes])
 
   const log = options.logLevel
     ? new Log(
