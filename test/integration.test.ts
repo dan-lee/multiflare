@@ -1,13 +1,13 @@
 import http from 'node:http'
 
-import multiflare from '../src/multiflare.js'
+import multiflare from '../src/multiflare'
 
 /**
  * @param {string} hostname
  * @param {number=} port
  * @returns {Promise<string>}
  */
-const request = async (hostname, port = 80) =>
+const request = async (hostname: string, port = 80) =>
   new Promise((resolve, reject) => {
     http
       .request(`http://${hostname}`, (res) =>

@@ -6,24 +6,25 @@ import { Log, LogLevel, Miniflare } from 'miniflare'
 import glob from 'tiny-glob/sync.js'
 import TOML from '@iarna/toml'
 
-/**
- * @typedef {Object} MultiflareOptions
- * @property {string} rootDir
- * @property {string=} https
- * @property {string=} key
- * @property {string=} cert
- * @property {string=} port
- * @property {'none' |'error' |'warn' |'info' |'debug' |'verbose'=} logLevel
- */
+export type MultiflareOptions = {
+  rootDir: string
+  https?: string
+  key?: string
+  cert?: string
+  port?: string
+  logLevel?: 'none' | 'error' | 'warn' | 'info' | 'debug' | 'verbose'
+}
 
-const _filename = fileURLToPath(import.meta.url)
-const _dirname = path.dirname(_filename)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-/**
- * @param {MultiflareOptions} options
- * @returns {Promise<{ stop: () => Promise<void>, server: import('http').Server | import('https').Server, miniflare: Miniflare}>}
- */
-const multiflare = async (options) => {
+const objectMap = <TValue, TResult>(
+  obj: Record<string, TValue>,
+  fn: <TKey extends string>(key: TKey, value: TValue) => [TKey, TResult],
+) =>
+  Object.fromEntries(Object.entries(obj).map(([key, value]) => fn(key, value)))
+
+const multiflare = async (options: MultiflareOptions) => {
   const searchDir = path.join(process.cwd(), options.rootDir)
 
   const wranglers = glob('./**/wrangler.toml', {
@@ -31,23 +32,13 @@ const multiflare = async (options) => {
     cwd: searchDir,
   })
 
-  /** @type {Record<string, string>} */
-  const mounts = Object.fromEntries(
+  const config = Object.fromEntries(
     wranglers.map((wranglerPath) => {
       const wranglerConfig = TOML.parse(readFileSync(wranglerPath, 'utf-8'))
       const dir = path.dirname(wranglerPath)
+      const mount = path.resolve(__dirname, dir)
 
-      return [wranglerConfig.name, path.resolve(_dirname, dir)]
-    }),
-  )
-
-  /** @type {Record<string, string[]>} */
-  const routes = Object.fromEntries(
-    wranglers.map((wranglerPath) => {
-      const wranglerConfig = TOML.parse(readFileSync(wranglerPath, 'utf-8'))
-
-      /** @type {*} */
-      const env = wranglerConfig.env
+      const env = wranglerConfig.env as any
 
       if (!env?.dev) {
         console.error(
@@ -66,11 +57,16 @@ const multiflare = async (options) => {
         process.exit(1)
       }
 
-      return [wranglerConfig.name, routes]
+      return [wranglerConfig.name, { mount, routes }] as [
+        string,
+        { mount: string; routes: string[] },
+      ]
     }),
   )
 
-  /** @type {LogLevel} */
+  const mounts = objectMap(config, (key, value) => [key, value.mount])
+  const routes = objectMap(config, (key, value) => [key, value.routes])
+
   const logLevel = {
     none: LogLevel.NONE,
     error: LogLevel.ERROR,
@@ -80,24 +76,24 @@ const multiflare = async (options) => {
     verbose: LogLevel.VERBOSE,
   }[options.logLevel ?? 'error']
 
-  /** @typedef {import('miniflare').MiniflareOptions} */
   const mf = new Miniflare({
     mounts,
     bindings: { routes, https: Boolean(options.https) },
-    log: new Log(logLevel),
-    watch: true,
-    modules: true,
-    scriptPath: path.resolve(_dirname, '../dist/rootWorker.dist.js'),
-    buildCommand: [
-      path.resolve(_dirname, '../node_modules/.bin/esbuild'),
-      path.resolve(_dirname, './rootWorker.js'),
-      '--bundle',
-      '--format=esm',
-      `--outfile=${path.resolve(_dirname, '../dist/rootWorker.dist.js')}`,
-    ].join(' '),
     port: options.port ?? options.https ? 443 : 80,
     httpsKeyPath: options.key,
     httpsCertPath: options.cert,
+
+    log: new Log(logLevel),
+    watch: true,
+    modules: true,
+    buildCommand: [
+      path.resolve(__dirname, '../node_modules/.bin/esbuild'),
+      path.resolve(__dirname, './rootWorker.js'),
+      '--bundle',
+      '--format=esm',
+      `--outfile=${path.resolve(__dirname, '../dist/rootWorker.dist.js')}`,
+    ].join(' '),
+    scriptPath: path.resolve(__dirname, '../dist/rootWorker.dist.js'),
   })
 
   const server = await mf.startServer()

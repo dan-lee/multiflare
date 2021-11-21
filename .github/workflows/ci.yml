@@ -2,6 +2,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 jobs:
   build:
     name: 'Build and test'
@@ -11,10 +14,12 @@ jobs:
         if: ${{ env.ACT }}
         run: npm install -g yarn
       - uses: actions/checkout@v2
+      # if in ACT local runner
       - uses: actions/setup-node@v2
         if: ${{ env.ACT }}
         with:
           node-version: '16.x'
+      # else github action
       - uses: actions/setup-node@v2
         if: ${{ !env.ACT }}
         with:
