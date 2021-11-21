@@ -4,10 +4,8 @@ addEventListener('fetch', async (e) => {
   if (pathname === '/') {
     e.respondWith(new Response('Blog ok'))
   } else {
-    e.respondWith(
-      BLOG_ENTRIES.get(pathname.slice(1), 'json').then(
-        (value) => new Response(value),
-      ),
-    )
+    const entry = BLOG_ENTRIES.get(pathname.slice(1), 'json')
+
+    e.respondWith(entry.then((value) => new Response(value)))
   }
 })

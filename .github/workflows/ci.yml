@@ -30,10 +30,10 @@ jobs:
           echo "127.0.0.1 multiflare.test www.multiflare.test api.multiflare.test blog.multiflare.test chat.multiflare.test" | sudo tee -a /etc/hosts
       - name: Open port 80
         # https://stackoverflow.com/a/23281417/612202
-        run: |
-          sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\``
+        run: sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\``
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - run: yarn build
+      - name: Build
+        run: yarn build
       - name: Run test
         run: yarn test

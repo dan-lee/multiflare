@@ -3,11 +3,6 @@ import crypto from 'node:crypto'
 
 import multiflare from '../src/multiflare'
 
-/**
- * @param {string} hostname
- * @param {number=} port
- * @returns {Promise<string>}
- */
 const request = async (hostname: string, port = 80) =>
   new Promise((resolve, reject) => {
     http
@@ -20,10 +15,7 @@ const request = async (hostname: string, port = 80) =>
 
 describe('multiflare', () => {
   it('should respond', async () => {
-    const { stop } = await multiflare({
-      rootDir: './test/test-workers',
-      logLevel: 'error',
-    })
+    const { stop } = await multiflare({ rootDir: './test/test-workers' })
 
     await expect(request('multiflare.test')).resolves.toBe('Page ok')
     await expect(request('www.multiflare.test')).resolves.toBe('Page ok')
@@ -49,5 +41,7 @@ describe('multiflare', () => {
     await stop()
   })
 
-  it('should work with Cache', async () => {})
+  it('should work with Cache', async () => {
+    // todo
+  })
 })

@@ -69,14 +69,18 @@ const multiflare = async (options: MultiflareOptions) => {
   const mounts = objectMap(config, (key, value) => [key, value.mount])
   const routes = objectMap(config, (key, value) => [key, value.routes])
 
-  const logLevel = {
-    none: LogLevel.NONE,
-    error: LogLevel.ERROR,
-    warn: LogLevel.WARN,
-    info: LogLevel.INFO,
-    debug: LogLevel.DEBUG,
-    verbose: LogLevel.VERBOSE,
-  }[options.logLevel ?? 'error']
+  const log = options.logLevel
+    ? new Log(
+        {
+          none: LogLevel.NONE,
+          error: LogLevel.ERROR,
+          warn: LogLevel.WARN,
+          info: LogLevel.INFO,
+          debug: LogLevel.DEBUG,
+          verbose: LogLevel.VERBOSE,
+        }[options.logLevel],
+      )
+    : undefined
 
   const mf = new Miniflare({
     mounts,
@@ -85,7 +89,7 @@ const multiflare = async (options: MultiflareOptions) => {
     httpsKeyPath: options.key,
     httpsCertPath: options.cert,
 
-    log: new Log(logLevel),
+    log,
     watch: true,
     modules: true,
     buildCommand: [
