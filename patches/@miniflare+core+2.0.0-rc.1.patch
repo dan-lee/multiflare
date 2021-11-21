@@ -1,5 +1,5 @@
 diff --git a/node_modules/@miniflare/core/dist/src/index.js b/node_modules/@miniflare/core/dist/src/index.js
-index dc17491..52b3f0b 100644
+index dc17491..3911f77 100644
 --- a/node_modules/@miniflare/core/dist/src/index.js
 +++ b/node_modules/@miniflare/core/dist/src/index.js
 @@ -203,7 +203,7 @@ var BuildPlugin = class extends Plugin2 {
@@ -11,7 +11,29 @@ index dc17491..52b3f0b 100644
          shell: true,
          stdio: "inherit",
          env: { ...process.env, MINIFLARE: "1" }
-@@ -1698,20 +1698,28 @@ var MiniflareCore = class extends TypedEventTarget {
+@@ -1635,6 +1635,21 @@ var MiniflareCore = class extends TypedEventTarget {
+         const configDir = path6.dirname(configPath);
+         populateBuildConfig(config, configDir, configEnv);
+         options = splitWranglerConfig(this.#plugins, this.#overrides, config, configDir);
++
++        if (typeof configDir === 'string') {
++          if (typeof options.KVPlugin.kvPersist === 'string') {
++            options.KVPlugin.kvPersist
++              = path6.resolve(configDir, 'kv', options.KVPlugin.kvPersist)
++          }
++          if (typeof options.CachePlugin.cachePersist === 'string') {
++            options.CachePlugin.cachePersist
++              = path6.resolve(configDir, options.CachePlugin.cachePersist)
++          }
++          if (typeof options.DurableObjectsPlugin.durableObjectsPersist === 'string') {
++            options.DurableObjectsPlugin.durableObjectsPersist
++              = path6.resolve(configDir, options.DurableObjectsPlugin.durableObjectsPersist)
++          }
++        }
+       } catch (e) {
+         if (!(e.code === "ENOENT" && originalConfigPath === true)) {
+           throw e;
+@@ -1698,20 +1713,28 @@ var MiniflareCore = class extends TypedEventTarget {
          if (name === "") {
            throw new MiniflareCoreError("ERR_MOUNT_NO_NAME", "Mount name cannot be empty");
          }
@@ -44,7 +66,7 @@ index dc17491..52b3f0b 100644
          } else {
            this.#ctx.log.debug(`Mounting "${name}"...`);
            let log = this.#ctx.log;
-@@ -1723,7 +1731,7 @@ var MiniflareCore = class extends TypedEventTarget {
+@@ -1723,7 +1746,7 @@ var MiniflareCore = class extends TypedEventTarget {
              log,
              scriptRunForModuleExports: false
            };
