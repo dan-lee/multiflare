@@ -16,8 +16,17 @@ import TOML from '@iarna/toml'
  * @property {'none' |'error' |'warn' |'info' |'debug' |'verbose'=} logLevel
  */
 
-const _filename = fileURLToPath(import.meta.url)
-const _dirname = path.dirname(_filename)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+/**
+ * @template TValue, TResult
+ * @template {string} TKey
+ * @param {Record<string, TValue>} obj
+ * @param {<TKey>(key: TKey, value: TValue) => [TKey, TResult]} fn
+ */
+const objectMap = (obj, fn) =>
+  Object.fromEntries(Object.entries(obj).map(([key, value]) => fn(key, value)))
 
 /**
  * @param {MultiflareOptions} options
@@ -31,20 +40,11 @@ const multiflare = async (options) => {
     cwd: searchDir,
   })
 
-  /** @type {Record<string, string>} */
-  const mounts = Object.fromEntries(
+  const config = Object.fromEntries(
     wranglers.map((wranglerPath) => {
       const wranglerConfig = TOML.parse(readFileSync(wranglerPath, 'utf-8'))
       const dir = path.dirname(wranglerPath)
-
-      return [wranglerConfig.name, path.resolve(_dirname, dir)]
-    }),
-  )
-
-  /** @type {Record<string, string[]>} */
-  const routes = Object.fromEntries(
-    wranglers.map((wranglerPath) => {
-      const wranglerConfig = TOML.parse(readFileSync(wranglerPath, 'utf-8'))
+      const mount = path.resolve(__dirname, dir)
 
       /** @type {*} */
       const env = wranglerConfig.env
@@ -66,9 +66,12 @@ const multiflare = async (options) => {
         process.exit(1)
       }
 
-      return [wranglerConfig.name, routes]
+      return [wranglerConfig.name, { mount, routes }]
     }),
   )
+
+  const mounts = objectMap(config, (key, value) => [key, value.mount])
+  const routes = objectMap(config, (key, value) => [key, value.routes])
 
   /** @type {LogLevel} */
   const logLevel = {
@@ -87,13 +90,13 @@ const multiflare = async (options) => {
     log: new Log(logLevel),
     watch: true,
     modules: true,
-    scriptPath: path.resolve(_dirname, '../dist/rootWorker.dist.js'),
+    scriptPath: path.resolve(__dirname, '../dist/rootWorker.dist.js'),
     buildCommand: [
-      path.resolve(_dirname, '../node_modules/.bin/esbuild'),
-      path.resolve(_dirname, './rootWorker.js'),
+      path.resolve(__dirname, '../node_modules/.bin/esbuild'),
+      path.resolve(__dirname, './rootWorker.js'),
       '--bundle',
       '--format=esm',
-      `--outfile=${path.resolve(_dirname, '../dist/rootWorker.dist.js')}`,
+      `--outfile=${path.resolve(__dirname, '../dist/rootWorker.dist.js')}`,
     ].join(' '),
     port: options.port ?? options.https ? 443 : 80,
     httpsKeyPath: options.key,
