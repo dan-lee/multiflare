@@ -1,16 +1,14 @@
 import type { Miniflare } from 'miniflare'
 import type { CacheInterface, CacheStorage } from '@miniflare/cache'
 
-const __caches = new WeakMap<Miniflare, CacheStorage>()
+let __caches: CacheStorage
 
 export const createCacheProxy = (mf: Miniflare) => {
   const getCache = async (name?: string) => {
-    if (!__caches.has(mf)) {
-      __caches.set(mf, await mf.getCaches())
+    if (!__caches) {
+      __caches = await mf.getCaches()
     }
-    const caches = __caches.get(mf)!
-
-    return name ? caches.open(name) : caches.default
+    return name ? __caches.open(name) : __caches.default
   }
 
   const createCacheProxyFn =

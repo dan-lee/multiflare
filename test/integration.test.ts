@@ -1,17 +1,17 @@
-import http from 'node:http'
 import crypto from 'node:crypto'
+import { fetch, RequestInfo, RequestInit } from 'undici'
 
 import multiflare from '../src/multiflare'
 
-const request = async (hostname: string, port = 80) =>
-  new Promise((resolve, reject) => {
-    http
-      .request(`http://${hostname}`, (res) =>
-        res.on('data', (buf) => resolve(buf.toString())),
-      )
-      .on('error', reject)
-      .end()
-  })
+const request = async (
+  hostname: RequestInfo,
+  options?: RequestInit,
+  type: 'text' | 'json' = 'text',
+) => {
+  const res = await fetch(`http://${hostname}`, options)
+
+  return await res[type]()
+}
 
 describe('multiflare', () => {
   it('should respond', async () => {
@@ -42,6 +42,21 @@ describe('multiflare', () => {
   })
 
   it('should work with Cache', async () => {
-    // todo
+    const { stop } = await multiflare({
+      rootDir: './test/test-workers',
+    })
+
+    const toTest = { test: 'cached value' }
+
+    await request(`multiflare.test/cache`, {
+      method: 'POST',
+      body: JSON.stringify(toTest),
+    })
+
+    expect(await request('multiflare.test/cache', undefined, 'json')).toEqual(
+      toTest,
+    )
+
+    await stop()
   })
 })
