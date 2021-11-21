@@ -30,9 +30,5 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - run: yarn build
-      - name: Run multiflare
-        run: |
-          yarn example &
-          export MULTIFLARE_PID=$!
-          yarn test
-          kill $MULTIFLARE_PID
+      - name: Run test
+        run: yarn test

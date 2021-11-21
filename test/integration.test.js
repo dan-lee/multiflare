@@ -1,5 +1,7 @@
 import http from 'node:http'
 
+import multiflare from '../src/multiflare.js'
+
 /**
  * @param {string} hostname
  * @param {number=} port
@@ -17,10 +19,17 @@ const request = async (hostname, port = 80) =>
 
 describe('multiflare', () => {
   it('should respond', async () => {
+    const { stop } = await multiflare({
+      rootDir: './test/test-workers',
+      logLevel: 'error',
+    })
+
     await expect(request('multiflare.test')).resolves.toBe('Page ok')
     await expect(request('www.multiflare.test')).resolves.toBe('Page ok')
     await expect(request('api.multiflare.test')).resolves.toBe('API ok')
     await expect(request('blog.multiflare.test')).resolves.toBe('Blog ok')
     await expect(request('chat.multiflare.test')).resolves.toBe('Chat ok')
+
+    await stop()
   })
 })

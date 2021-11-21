@@ -1,0 +1,19 @@
+name = "blog"
+
+kv_namespaces = [
+  { binding = "BLOG_ENTRIES" }
+]
+
+[env.dev]
+route = "blog.multiflare.test/*"
+
+# this is just for demonstration
+[env.production]
+route = "blog.multiflare.io/*"
+
+[build.upload]
+dir = ""
+main = "./worker.js"
+
+[miniflare]
+kv_persist = true
