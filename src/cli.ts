@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
-import multiflare, { MultiflareOptions } from './multiflare'
+import multiflare, { MultiflareOptions } from './multiflare.js'
 
 const cli = new Command('multiflare')
   .argument('<directory>', 'Root directory of workers.')
