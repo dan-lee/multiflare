@@ -28,7 +28,7 @@
     "build": "rm -rf dist && tsc",
     "multiflare": "node --experimental-vm-modules --loader @erwink/esb src/cli.ts",
     "example": "yarn multiflare example/multiflare/workers",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest test",
     "postinstall": "patch-package",
     "prepublishOnly": "yarn test && yarn build"
   },
