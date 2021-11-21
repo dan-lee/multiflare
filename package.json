@@ -1,5 +1,5 @@
 {
-  "version": "0.1.5",
+  "version": "0.1.6",
   "engines": {
     "node": ">=16"
   },
@@ -17,7 +17,12 @@
     "patches"
   ],
   "exports": {
-    "import": "./dist/multiflare.js"
+    ".": {
+      "import": "./dist/index.js"
+    },
+    "./*": {
+      "import": "./dist/*.js"
+    }
   },
   "dependencies": {
     "@iarna/toml": "3.0.0",
