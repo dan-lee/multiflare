@@ -98,9 +98,9 @@ const multiflare = async (options: MultiflareOptions) => {
       path.resolve(__dirname, './rootWorker.js'),
       '--bundle',
       '--format=esm',
-      `--outfile=${path.resolve(__dirname, '../dist/rootWorker.dist.js')}`,
+      `--outfile=${path.resolve(__dirname, 'rootWorker.dist.js')}`,
     ].join(' '),
-    scriptPath: path.resolve(__dirname, '../dist/rootWorker.dist.js'),
+    scriptPath: path.resolve(__dirname, 'rootWorker.dist.js'),
   })
 
   const server = await mf.startServer()

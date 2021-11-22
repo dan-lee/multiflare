@@ -24,7 +24,7 @@
     "tiny-glob": "0.2.9"
   },
   "scripts": {
-    "build": "rm -rf dist && tsc",
+    "build": "tsup",
     "multiflare": "node --experimental-vm-modules --loader @erwink/esb src/cli.ts",
     "example": "yarn multiflare example/multiflare/workers",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
@@ -39,6 +39,7 @@
     "jest": "27.3.1",
     "jest-environment-miniflare": "2.0.0-rc.2",
     "prettier": "2.4.1",
+    "tsup": "5.8.0",
     "typescript": "4.5.2",
     "undici": "4.10.2"
   }
