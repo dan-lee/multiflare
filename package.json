@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "engines": {
     "node": ">=16"
   },
@@ -13,15 +13,14 @@
   "types": "dist/multiflare.d.ts",
   "module": "dist/multiflare.js",
   "files": [
-    "dist",
-    "patches"
+    "dist"
   ],
   "dependencies": {
     "@iarna/toml": "3.0.0",
     "commander": "8.3.0",
     "esbuild": "0.13.14",
     "match-url-wildcard": "0.0.4",
-    "miniflare": "2.0.0-rc.1",
+    "miniflare": "2.0.0-rc.2",
     "tiny-glob": "0.2.9"
   },
   "scripts": {
@@ -29,7 +28,6 @@
     "multiflare": "node --experimental-vm-modules --loader @erwink/esb src/cli.ts",
     "example": "yarn multiflare example/multiflare/workers",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
-    "postinstall": "patch-package",
     "prepublishOnly": "yarn test && yarn build"
   },
   "devDependencies": {
@@ -39,8 +37,7 @@
     "@types/node": "16.11.9",
     "esbuild-jest": "0.5.0",
     "jest": "27.3.1",
-    "jest-environment-miniflare": "2.0.0-rc.1",
-    "patch-package": "6.4.7",
+    "jest-environment-miniflare": "2.0.0-rc.2",
     "prettier": "2.4.1",
     "typescript": "4.5.2",
     "undici": "4.10.2"
