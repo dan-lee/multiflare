@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { readFileSync } from 'node:fs'
 
 import { Log, LogLevel, Miniflare } from 'miniflare'
-import glob from 'tiny-glob/sync'
+import glob from 'tiny-glob/sync.js'
 import TOML from '@iarna/toml'
 
 import { createKvProxy } from './utils/kv'

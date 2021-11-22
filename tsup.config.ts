@@ -7,5 +7,5 @@ export default defineConfig({
   clean: true,
   target: 'node16',
   dts: true,
-  entryPoints: ['src/multiflare.ts', 'src/cli.ts'],
+  entryPoints: ['src/multiflare.ts', 'src/cli.ts', 'src/rootWorker.ts'],
 })
