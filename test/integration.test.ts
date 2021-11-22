@@ -42,22 +42,22 @@ describe('multiflare', () => {
   })
 
   it('should work with Cache', async () => {
-    const { stop, getWorker } = await multiflare({
+    const { stop, getWorker, miniflare } = await multiflare({
       rootDir: './test/test-workers',
     })
 
-    const toTest = { test: 'cached value' }
+    const toTest = { test: 'cached 133' }
 
     await getWorker('www').cache.default.put(
-      'http://multiflare.test',
+      'http://multiflare.test/in-cache',
       new Response(JSON.stringify(toTest), {
         // very important to set!
-        headers: { 'Cache-Control': 'max-age=3600' },
+        headers: { 'Cache-Control': 'max-age=86400' },
       }),
     )
 
     expect(
-      await request('www.multiflare.test/cache', undefined, 'json'),
+      await request('www.multiflare.test/from-cache', undefined, 'json'),
     ).toEqual(toTest)
 
     await stop()

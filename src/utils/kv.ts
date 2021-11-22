@@ -3,7 +3,7 @@ import type { Miniflare } from 'miniflare'
 const __bindings = new Map<string, Record<string, KVNamespace>>()
 
 export const createKvProxy =
-  (worker: string, mf: Miniflare) => (namespace: string) => {
+  (mf: Miniflare, worker: string) => (namespace: string) => {
     const createProxiedFn =
       <Fn extends keyof KVNamespace>(fn: Fn) =>
       async (...args: Parameters<KVNamespace[Fn]>) => {

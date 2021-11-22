@@ -76,23 +76,6 @@ yarn multiflare ./example/multiflare/workers
 NODE_OPTIONS=--experimental-vm-modules yarn multiflare ./example/multiflare/workers
 ```
 
-## ⚡️ Additional notes
-
-This package quite literally lives on the edge, be sure to always be patched up with [`patch-package`](https://github.com/ds300/patch-package) in your `postinstall` script:
-
-`package.json`:
-
-```json
-{
-  "scripts": {
-    "postinstall": "patch-package && patch-package --patch-dir node_modules/multiflare/patches"
-  },
-  "dependencies": {
-    "patch-package": "latest"
-  }
-}
-```
-
 ## 🔧 Setup
 
 Put all your workers as subdirectory in a common directory with their respective `wrangler.toml` files. Like so:

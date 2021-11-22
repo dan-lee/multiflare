@@ -2,10 +2,8 @@ export default {
   async fetch(request) {
     const url = new URL(request.url)
 
-    if (url.pathname === '/cache') {
-      const cache = caches.default
-
-      return cache.match('http://multiflare.test')
+    if (url.pathname === '/from-cache') {
+      return caches.default.match('http://multiflare.test/in-cache')
     } else {
       return new Response('Page ok')
     }

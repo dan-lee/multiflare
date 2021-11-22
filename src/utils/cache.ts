@@ -1,25 +1,23 @@
 import type { Miniflare } from 'miniflare'
-import type { CacheInterface, CacheStorage } from '@miniflare/cache'
-
-let __caches: CacheStorage
+import type { CacheInterface } from '@miniflare/cache'
 
 export const createCacheProxy = (mf: Miniflare) => {
   const getCache = async (name?: string) => {
-    if (!__caches) {
-      __caches = await mf.getCaches()
-    }
-    return name ? __caches.open(name) : __caches.default
+    const caches = await mf.getCaches()
+    return name ? caches.open(name) : caches.default
   }
 
-  const createCacheProxyFn =
-    (name: keyof CacheInterface, cacheName?: string) =>
-    (...args: Parameters<CacheInterface['put']>) =>
-    async () => {
-      const cache = await getCache(cacheName)
-      return cache[name](...args)
-    }
-
   const methods = ['put', 'match', 'delete'] as const
+
+  const createCacheProxyFn =
+    <Key extends typeof methods[number]>(key: Key, cacheToOpen?: string) =>
+    async (...args: Parameters<CacheInterface[Key]>) => {
+      const cache = await getCache(cacheToOpen)
+
+      // todo
+      // @ts-ignore
+      return cache[key](...args)
+    }
 
   return {
     default: Object.fromEntries(

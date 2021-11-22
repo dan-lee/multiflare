@@ -114,7 +114,7 @@ const multiflare = async (options: MultiflareOptions) => {
     stop,
     server,
     getWorker: (worker: string) => ({
-      kv: createKvProxy(worker, mf),
+      kv: createKvProxy(mf, worker),
       cache: createCacheProxy(mf),
     }),
     miniflare: mf,
