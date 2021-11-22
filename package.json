@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0",
+  "version": "0.4.1",
   "engines": {
     "node": ">=16"
   },
@@ -28,7 +28,7 @@
     "multiflare": "node --experimental-vm-modules --loader @erwink/esb src/cli.ts",
     "example": "yarn multiflare example/multiflare/workers",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
-    "prepublishOnly": "yarn test && yarn build"
+    "prepublishOnly": "yarn build && yarn test"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "3.2.0",
