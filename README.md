@@ -1,4 +1,4 @@
-<img src="./wording.png"/>
+<img src="logo.png"/>
 
 Run multiple simulated [Cloudflare Workers](https://workers.cloudflare.com/) in your project with `multiflare` utilizing [the amazing `miniflare`](https://v2.miniflare.dev/) and its [`mount` option](https://v2.miniflare.dev/mount.html#mounting-workers) 🚀
 
