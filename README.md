@@ -76,7 +76,22 @@ yarn multiflare ./example/multiflare/workers
 NODE_OPTIONS=--experimental-vm-modules yarn multiflare ./example/multiflare/workers
 ```
 
-It requires some setup though:
+## ⚡️ Additional notes
+
+This package quite literally lives on the edge, be sure to always be patched up with [`patch-package`](https://github.com/ds300/patch-package) in your `postinstall` script:
+
+`package.json`:
+
+```json
+{
+  "scripts": {
+    "postinstall": "patch-package && patch-package --patch-dir node_modules/multiflare/patches"
+  },
+  "dependencies": {
+    "patch-package": "latest"
+  }
+}
+```
 
 ## 🔧 Setup
 
