@@ -1,5 +1,5 @@
 import crypto from 'node:crypto'
-import { fetch, RequestInfo, RequestInit } from 'undici'
+import { fetch, RequestInfo, RequestInit, Response } from 'undici'
 
 import multiflare from '../src/multiflare'
 
@@ -42,16 +42,19 @@ describe('multiflare', () => {
   })
 
   it('should work with Cache', async () => {
-    const { stop } = await multiflare({
+    const { stop, getWorker } = await multiflare({
       rootDir: './test/test-workers',
     })
 
     const toTest = { test: 'cached value' }
 
-    await request(`www.multiflare.test/cache`, {
-      method: 'POST',
-      body: JSON.stringify(toTest),
-    })
+    await getWorker('www').cache.default.put(
+      'http://multiflare.test',
+      new Response(JSON.stringify(toTest), {
+        // very important to set!
+        headers: { 'Cache-Control': 'max-age=3600' },
+      }),
+    )
 
     expect(
       await request('www.multiflare.test/cache', undefined, 'json'),
