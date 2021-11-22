@@ -3,12 +3,12 @@ import { fileURLToPath } from 'node:url'
 import { readFileSync } from 'node:fs'
 
 import { Log, LogLevel, Miniflare } from 'miniflare'
-import glob from 'tiny-glob/sync.js'
+import glob from 'tiny-glob/sync'
 import TOML from '@iarna/toml'
 
-import { createKvProxy } from './utils/kv.js'
-import { createCacheProxy } from './utils/cache.js'
-import { objectMap } from './utils/objectMap.js'
+import { createKvProxy } from './utils/kv'
+import { createCacheProxy } from './utils/cache'
+import { objectMap } from './utils/objectMap'
 
 export type MultiflareOptions = {
   rootDir: string
