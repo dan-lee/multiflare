@@ -34,6 +34,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Check types
-        run: yarn build --noEmit
+        run: yarn build
       - name: Run test
         run: yarn test
