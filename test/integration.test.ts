@@ -48,14 +48,14 @@ describe('multiflare', () => {
 
     const toTest = { test: 'cached value' }
 
-    await request(`multiflare.test/cache`, {
+    await request(`www.multiflare.test/cache`, {
       method: 'POST',
       body: JSON.stringify(toTest),
     })
 
-    expect(await request('multiflare.test/cache', undefined, 'json')).toEqual(
-      toTest,
-    )
+    expect(
+      await request('www.multiflare.test/cache', undefined, 'json'),
+    ).toEqual(toTest)
 
     await stop()
   })

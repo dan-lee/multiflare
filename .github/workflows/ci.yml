@@ -33,7 +33,7 @@ jobs:
         run: sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\``
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Build
-        run: yarn build
+      - name: Check types
+        run: yarn build --noEmit
       - name: Run test
         run: yarn test
