@@ -24,7 +24,7 @@
   },
   "scripts": {
     "build": "tsup && yarn build:root-worker",
-    "build:root-worker": "esbuild src/rootWorker.ts --bundle --format=esm --outfile=dist/rootWorker.js",
+    "build:root-worker": "esbuild src/root-worker.ts --bundle --format=esm --outfile=dist/root-worker.js",
     "multiflare": "node --experimental-vm-modules --loader @erwink/esb src/cli.ts",
     "example": "yarn multiflare example/multiflare/workers",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",

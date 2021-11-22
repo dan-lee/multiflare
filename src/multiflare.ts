@@ -6,8 +6,6 @@ import { Log, LogLevel, Miniflare } from 'miniflare'
 import glob from 'tiny-glob/sync.js'
 import TOML from '@iarna/toml'
 
-import { createKvProxy } from './utils/kv'
-import { createCacheProxy } from './utils/cache'
 import { objectMap } from './utils/objectMap'
 
 export type MultiflareOptions = {
@@ -97,7 +95,7 @@ const multiflare = async (options: MultiflareOptions) => {
       process.env.NODE_ENV === 'production'
         ? undefined
         : 'yarn build:root-worker',
-    scriptPath: path.resolve(__dirname, '../dist/rootWorker.js'),
+    scriptPath: path.resolve(__dirname, '../dist/root-worker.js'),
   })
 
   const server = await mf.startServer()
@@ -110,10 +108,6 @@ const multiflare = async (options: MultiflareOptions) => {
   return {
     stop,
     server,
-    getWorker: (worker: string) => ({
-      kv: createKvProxy(mf, worker),
-      cache: createCacheProxy(mf),
-    }),
     miniflare: mf,
   }
 }

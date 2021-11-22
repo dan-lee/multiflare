@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import rootWorker from '../src/rootWorker'
+import rootWorker from '../src/root-worker'
 
 const fetchInterceptor = jest.fn()
 ;(globalThis as any).fetch = fetchInterceptor
