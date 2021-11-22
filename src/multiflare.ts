@@ -93,14 +93,11 @@ const multiflare = async (options: MultiflareOptions) => {
     log,
     watch: true,
     modules: true,
-    buildCommand: [
-      path.resolve(__dirname, '../node_modules/.bin/esbuild'),
-      path.resolve(__dirname, './rootWorker.js'),
-      '--bundle',
-      '--format=esm',
-      `--outfile=${path.resolve(__dirname, 'rootWorker.dist.js')}`,
-    ].join(' '),
-    scriptPath: path.resolve(__dirname, 'rootWorker.dist.js'),
+    buildCommand:
+      process.env.NODE_ENV === 'production'
+        ? undefined
+        : 'yarn build:root-worker',
+    scriptPath: path.resolve(__dirname, '../dist/rootWorker.js'),
   })
 
   const server = await mf.startServer()
