@@ -3,10 +3,10 @@ import { fileURLToPath } from 'node:url'
 import { readFileSync } from 'node:fs'
 
 import { Log, LogLevel, Miniflare } from 'miniflare'
-import glob from 'tiny-glob/sync.js'
 import TOML from '@iarna/toml'
 
 import { objectMap } from './utils/objectMap'
+import { readDirRecursive } from './utils/readDirRecursive'
 
 export type MultiflareOptions = {
   rootDir: string
@@ -23,10 +23,9 @@ const __dirname = path.dirname(__filename)
 const multiflare = async (options: MultiflareOptions) => {
   const searchDir = path.join(process.cwd(), options.rootDir)
 
-  const wranglers = glob('./**/wrangler.toml', {
-    absolute: true,
-    cwd: searchDir,
-  })
+  const wranglers = readDirRecursive(searchDir)
+    .filter((file) => file.endsWith('wrangler.toml'))
+    .map((file) => path.resolve(searchDir, file))
 
   const config = Object.fromEntries(
     wranglers.map((wranglerPath) => {

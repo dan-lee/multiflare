@@ -6,7 +6,7 @@ const fetchInterceptor = jest.fn()
 
 beforeEach(fetchInterceptor.mockReset)
 
-describe('rootWorker', () => {
+describe('Root worker', () => {
   it('should match and fetch route', async () => {
     // blog.example.test is routed to 127.0.0.1
     const url = 'http://blog.example.test/news'

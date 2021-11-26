@@ -1,3 +1,5 @@
-addEventListener('fetch', (e) => {
-  e.respondWith(new Response('Chat ok'))
-})
+export default {
+  async fetch() {
+    return new Response('Chat ok')
+  },
+}

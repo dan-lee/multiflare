@@ -1,0 +1,26 @@
+diff --git a/node_modules/@miniflare/core/dist/src/index.js b/node_modules/@miniflare/core/dist/src/index.js
+index 4d85a8c..16a4077 100644
+--- a/node_modules/@miniflare/core/dist/src/index.js
++++ b/node_modules/@miniflare/core/dist/src/index.js
+@@ -1655,6 +1655,21 @@ var MiniflareCore = class extends TypedEventTarget {
+         const configDir = path6.dirname(configPath);
+         populateBuildConfig(config, configDir, configEnv);
+         options = splitWranglerConfig(this.#plugins, this.#overrides, config, configDir);
++
++        if (typeof configDir === 'string') {
++          if (typeof options.KVPlugin.kvPersist === 'string') {
++            options.KVPlugin.kvPersist
++              = path6.resolve(configDir, 'kv', options.KVPlugin.kvPersist)
++          }
++          if (typeof options.CachePlugin.cachePersist === 'string') {
++            options.CachePlugin.cachePersist
++              = path6.resolve(configDir, options.CachePlugin.cachePersist)
++          }
++          if (typeof options.DurableObjectsPlugin.durableObjectsPersist === 'string') {
++            options.DurableObjectsPlugin.durableObjectsPersist
++              = path6.resolve(configDir, options.DurableObjectsPlugin.durableObjectsPersist)
++          }
++        }
+       } catch (e) {
+         if (!(e.code === "ENOENT" && originalConfigPath === true)) {
+           throw e;
