@@ -19,8 +19,7 @@
     "@iarna/toml": "3.0.0",
     "commander": "8.3.0",
     "match-url-wildcard": "0.0.4",
-    "miniflare": "2.0.0-rc.2",
-    "tiny-glob": "0.2.9"
+    "miniflare": "2.0.0-rc.2"
   },
   "scripts": {
     "build": "tsup && yarn build:root-worker",

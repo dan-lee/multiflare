@@ -1,8 +1,13 @@
 name = "chat"
 
+bindings = [
+  { name = "CHAT_OBJECT", class_name = "ChatDurableObject" }
+]
+
 [env.dev]
 route = "chat.multiflare.test/*"
 
 [build.upload]
 dir = ""
 main = "./worker.js"
+format = "modules"
