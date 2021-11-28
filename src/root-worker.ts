@@ -23,6 +23,8 @@ export default {
     url.protocol = env.https ? 'https' : 'http'
     url.pathname = `/${project}${url.pathname}`
 
-    return fetch(url.toString(), req)
+    const response = await fetch(url.toString(), req)
+
+    return response.redirected ? Response.redirect(response.url) : response
   },
 }
