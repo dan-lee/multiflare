@@ -22,8 +22,6 @@ jobs:
         # https://stackoverflow.com/a/23281417/612202
         run: sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\``
       - run: yarn install --frozen-lockfile
-      - run: yarn build
-      - run: yarn test
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_PUBLISH_TOKEN }}
