@@ -1,3 +1,47 @@
+# ⚠️ Project archived ⚠️
+
+Since the release of [`miniflare@2.0.0-rc.3`](https://github.com/cloudflare/miniflare/releases/tag/v2.0.0-rc.3) the functionality `multiflare` provides, [can be achieved with `miniflare` alone](https://v2.miniflare.dev/mount.html#mounting-workers) 🎉
+
+<details>
+<summary>Example of how to do it with vanilla <code>miniflare</code></summary>
+
+```ts
+import path from 'node:path'
+import fs from 'node:fs/promises'
+import { Log, LogLevel, Miniflare } from 'miniflare'
+
+const workersDir = './workers'
+
+const dirs = await fs.readdir(workersDir, { withFileTypes: true })
+
+const mounts = Object.fromEntries(
+  dirs
+    .filter((dir) => dir.isDirectory())
+    .map((dir) => [
+      dir.name,
+      {
+        rootPath: path.join(workersDir, dir.name),
+        wranglerConfigEnv: 'dev',
+        wranglerConfigPath: true,
+        envPath: true,
+        packagePath: true,
+      },
+    ]),
+)
+
+new Miniflare({
+  mounts,
+  watch: true,
+  // … more miniflare options
+}).startServer()
+```
+
+Your `wrangler.toml` config files don't need to be changed.
+
+</details>
+
+---
+
 <img src="logo.png"/>
 
 Run multiple simulated [Cloudflare Workers](https://workers.cloudflare.com/) in your project with `multiflare` utilizing [the amazing `miniflare`](https://v2.miniflare.dev/) and its [`mount` option](https://v2.miniflare.dev/mount.html#mounting-workers) 🚀
